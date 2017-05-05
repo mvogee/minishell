@@ -29,6 +29,8 @@ fclean: fclean_libft fclean_printf
 
 re: fclean all
 
+re_mini: fclean_mini all
+
 clean_libft:
 	@make -C libft clean
 

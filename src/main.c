@@ -81,7 +81,7 @@ int		count_arguments(char *line)
 				return (print_errors(NO_CLOSING_QUOTE));
 			line++;
 		}
-		else if (*line == ' ')
+		else if (*line == ' ' || *line == '\t')
 		{
 			while (*line && *line == ' ')
 				line++;
@@ -108,11 +108,109 @@ char	*get_argline(void)
 	return (trimmed);
 }
 
+int		find_arglen(char *line)
+{
+	int		i;
+
+	i = 0;
+	if (line[i] == ' ' || line[i] == '\t')
+		i++;
+	while (line[i])
+	{
+		if (line[i] == '\"')
+		{
+			while (line[i] && line[i] != '\"')
+				i++;
+		}
+		if (line[i] == ' ' || line[i] == '\t')
+			break;
+		i++;
+	}
+	return (i);
+}
+
+char	*remove_inside_quotes(char *line)
+{
+	int		i;
+	char	*sub;
+	char	*remain;
+	char 	*ret;
+
+	i = 0;
+	ret = ft_strdup(line);
+	printf("riq: %s\n", line);
+	while (ret[i])
+	{
+		if (ret[i] == '\"')
+		{
+			sub = ft_strsub(line, 0, i - 1);
+			ret += i;
+			remain = ft_strdup(line);
+			ret -= i;
+			free(ret);
+			ret = ft_strjoin(sub, remain);
+			free(sub);
+			free(remain);
+			i = -1;
+		}
+		i++;
+	}
+	return (ret);
+}
+
+char	*abstract_arg(int arglen, char *line)
+{
+	char	*arg;
+	char	*first;
+
+	while (*line == ' ' || *line == '\t' || *line == '\"')
+	{
+		line++;
+		arglen--;
+	}
+	if (line[arglen - 1] == ' ' || line[arglen - 1] == '\t' || line[arglen - 1] == '\"')
+	{
+		printf("triggerd\n");
+		arglen--;
+	}
+	first = ft_strsub(line, 0, arglen);
+	if (!first)
+		return (NULL);
+	arg = remove_inside_quotes(first);
+	free(first);
+	return (arg);
+}
+
+char	**get_argv(char *line, int argc)
+{
+	char 	**argv;
+	int		i;
+	int		arglen;
+
+	i = 0;
+	argv = (char**)ft_memalloc(sizeof(char*) * argc + 1);
+	if (!argv)
+		return (NULL);
+	while (line && i <= argc && *line)
+	{
+		arglen = find_arglen(line); // make this. return int that is length of the entire argument
+		printf("%d\n", arglen);
+		argv[i] = abstract_arg(arglen, line); // make this. if there are quotes it needs to remove them
+		printf("argv[%d]: %s\n", i, argv[i]);
+		line += arglen;
+		i++;
+	}
+	argv[i] = NULL;
+	for (int k = 0; k < argc; k++)
+		printf("argv[%d]: %s\n", k, argv[k]);
+	return (argv);
+}
+
 int		minishell(char **envp)
 {
 	(void)envp;
 	char	*line;
-//	char	**argv;
+	char	**argv;
 	int		argc;
 	int		running;
 
@@ -123,11 +221,13 @@ int		minishell(char **envp)
 		ft_printf("$>");
 		line = get_argline();
 		argc = count_arguments(line);
-		printf("argc: %d\n", argc);
-//		argv = get_args(argline, argc); // make this. splits up the line by quotes and spaces
+		printf("argc: %d\n", argc); // remove me
 		if (argc > 0)
 		{
+			argv = get_argv(line, argc); // make this. splits up the line by quotes and spaces
 			ft_printf("\ngreater than 0\n");
+			for (int i = 0; i < argc; i++)
+				printf("argv[%d]: %s\n", i, argv[i]);
 		//	running = run_minishell_command(argc, argv));
 		//	free_argv(argv, argc); // make this
 			free(line);
