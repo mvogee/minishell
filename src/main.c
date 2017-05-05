@@ -113,12 +113,13 @@ int		find_arglen(char *line)
 	int		i;
 
 	i = 0;
-	if (line[i] == ' ' || line[i] == '\t')
+	while (line[i] == ' ' || line[i] == '\t')
 		i++;
 	while (line[i])
 	{
 		if (line[i] == '\"')
 		{
+			i++;
 			while (line[i] && line[i] != '\"')
 				i++;
 		}
@@ -138,20 +139,19 @@ char	*remove_inside_quotes(char *line)
 
 	i = 0;
 	ret = ft_strdup(line);
-	printf("riq: %s\n", line);
 	while (ret[i])
 	{
 		if (ret[i] == '\"')
 		{
-			sub = ft_strsub(line, 0, i - 1);
+			sub = ft_strsub(ret, 0, i);
 			ret += i;
-			remain = ft_strdup(line);
+			remain = ft_strdup(ret + 1);
 			ret -= i;
 			free(ret);
 			ret = ft_strjoin(sub, remain);
 			free(sub);
 			free(remain);
-			i = -1;
+			i = 0;
 		}
 		i++;
 	}
