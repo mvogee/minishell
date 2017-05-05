@@ -14,6 +14,7 @@ LINK = ./libft/libft.a \
 SRCS = src/main.c \
 		src/utils.c \
 		src/argv_help.c \
+		src/builtins/echo.c
 
 OBJS = $(SRCS:.c=.o)
 

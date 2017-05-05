@@ -37,4 +37,10 @@ int		find_arglen(char *line);
 char	*remove_inside_quotes(char *line);
 char	*abstract_arg(int arglen, char *line);
 
+/*
+** builtins
+*/
+
+void	builtins_echo(int argc, char **argv);
+
 #endif
