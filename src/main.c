@@ -3,28 +3,27 @@
 
 // • You must implement a series of builtins: echo, cd, setenv, unsetenv, env, exit
 
-int run_minishell_command(int argc, char **argv, char **envp)
+int run_minishell_command(int argc, char **argv, char **env)
 {
-	(void)argc;
-	(void)envp;
 	if (ft_strequ(argv[0], "exit"))
 		return (0);
 	else if (ft_strequ(argv[0], "echo"))
 		builtins_echo(argc, argv);
-	// else if (ft_strequ(argv[0], "cd"))
-	// 	builtins_cd(argv, argc); // make this
+	else if (ft_strequ(argv[0], "cd"))
+		builtins_cd(argc, argv, env); // make this
 	// else if (ft_strequ(argv[0], "setenv"))
 	// 	builtins_setenv(argv, argc); // make this
 	// else if (ft_strequ(argv[0], "unsetenv"))
 	// 	builtins_unsetenv(argv, argc); // make this
 	// else if (ft_strequ(argv[0], "env"))
-	// 	builtins_env(argv, argc); // make this
+		// builtins_env(argv, argc, env); // make this
 	// else if (ft_strequ(argv[0], "pwd"))
 	// 	builtins_pwd(argv, argc); // make this. bonus
 	// else if (argv[0][0] == '.' && argv[0][1] == '/')
 	// 	run_executable(argv, argc); // make this.
 	else
-		ft_printf("command not found: %s\n", argv[0]);
+		not_builtin(argc, argv, envp); // make this. searches the env paths for the executable
+//		ft_printf("command not found: %s\n", argv[0]);
 	return (1);
 
 }
@@ -89,25 +88,23 @@ char	**get_argv(char *line, int argc)
 	return (argv);
 }
 
-int		minishell(char **envp)
+int		minishell(t_environ *env)
 {
 	char	*line;
-	char	**argv;
-	int		argc;
 	int		running;
 
 	line = NULL;
 	running = 1;
 	while (running)
 	{
-		ft_printf("$>");
+		write(1, "$> ", 3);
 		line = get_argline();
-		argc = count_arguments(line);
-		if (argc > 0)
+		env->argc = count_arguments(line);
+		if (env->argc > 0)
 		{
-			argv = get_argv(line, argc);
-			running = run_minishell_command(argc, argv, envp); // working on these
-		//	free_argv(argv, argc); // make this
+			env->argv = get_argv(line, env->argc);
+			running = run_minishell_command(env->argc, env->argv, env->env); // working on these
+		//	free_argv(env->argv, env->argc); // make this
 			free(line);
 		}
 		line = NULL;
@@ -121,8 +118,9 @@ int		main(int argc, char **argv, char **envp)
 
 	environ.curdir = (char*)ft_memalloc(sizeof(char) * 1024);
 	environ.curdir = getcwd(environ.curdir, 1024);
+	environ.env = ft_dup_tbl(envp);
 	(void)argc;
 	(void)argv;
-	minishell(envp);
+	minishell(&environ);
 	exit(EXIT_SUCCESS);
 }

@@ -6,17 +6,22 @@
 #include <stdlib.h>
 
 extern char **environ;
+# define MAX_PATH 1024
 
 enum e_errors
 {
 	NO_CLOSING_QUOTE,
+	DIR_NOT_FOUDN,
+	COMMAND_NOT_FOUND,
 	WRONG
 };
 
 typedef struct	s_environ
 {
-	char	*curdir;
-
+	char	*curdir; //dont know that i need to hold this
+	char	**env;
+	char	**argv;
+	int		argc;
 }				t_environ;
 
 int	count_words(char const *s, char c, int flag, int wrdstrt);
@@ -42,5 +47,7 @@ char	*abstract_arg(int arglen, char *line);
 */
 
 void	builtins_echo(int argc, char **argv);
+
+void	builtins_cd(int argc, char **argv, char **env);
 
 #endif

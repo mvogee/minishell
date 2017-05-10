@@ -70,6 +70,7 @@ SRC = ft_isalpha.c \
 		ft_itoa_base_unsigned.c \
 		ft_abs.c \
 		ft_atol.c \
+		ft_dup_tbl.c \
 
 OBJS = $(SRC:.c=.o)
 
@@ -84,7 +85,7 @@ $(NAME):
 	ar rc $(NAME) $(OBJS)
 	ranlib $(NAME)
 
-clean: 
+clean:
 	/bin/rm -f $(OBJS)
 
 fclean: clean

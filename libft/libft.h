@@ -96,5 +96,6 @@ char			*ft_lltoa(intmax_t n);
 char			*ft_itoa_base_unsigned(uintmax_t value, int base);
 int				ft_abs(int x);
 long			ft_atol(const char *str);
+char			**ft_dup_tbl(char **tbl);
 
 #endif
