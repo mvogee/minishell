@@ -14,7 +14,7 @@ int		count_arguments(char *line)
 			while (*line && *line != '\"')
 				line++;
 			if (*line == '\0')
-				return (print_errors(NO_CLOSING_QUOTE));
+				return (print_errors(NO_CLOSING_QUOTE, NULL));
 			line++;
 		}
 		else if (*line == ' ' || *line == '\t')

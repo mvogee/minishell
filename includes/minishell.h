@@ -3,6 +3,7 @@
 
 #include "libft.h"
 #include "ft_printf.h"
+#include <signal.h>
 #include <stdlib.h>
 
 extern char **environ;
@@ -11,7 +12,7 @@ extern char **environ;
 enum e_errors
 {
 	NO_CLOSING_QUOTE,
-	DIR_NOT_FOUDN,
+	DIR_NOT_FOUND,
 	COMMAND_NOT_FOUND,
 	WRONG
 };
@@ -30,7 +31,7 @@ int	count_words(char const *s, char c, int flag, int wrdstrt);
 ** main.c
 */
 
-int		print_errors(int error);
+int		print_errors(int error, char *problem);
 
 /*
 ** argv_help.c
@@ -49,5 +50,7 @@ char	*abstract_arg(int arglen, char *line);
 void	builtins_echo(int argc, char **argv);
 
 void	builtins_cd(int argc, char **argv, char **env);
+
+void	not_builtin(char **argv, char **env);
 
 #endif

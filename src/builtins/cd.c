@@ -26,7 +26,7 @@ void	builtins_cd(int argc, char **argv, char **env)
 //		update_cwd(cwd, env); // make this. update the env variale for current working directory
 	}
 	else
-		print_errors(DIR_NOT_FOUND);
+		print_errors(DIR_NOT_FOUND, argv[1]);
 	free(cwd);
 	printf("%s\n", env[18]);
 	printf("%s\n", env[19]);

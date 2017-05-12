@@ -9,7 +9,7 @@ int run_minishell_command(int argc, char **argv, char **env)
 		return (0);
 	else if (ft_strequ(argv[0], "echo"))
 		builtins_echo(argc, argv);
-	else if (ft_strequ(argv[0], "cd"))
+	else if (ft_strequ(argv[0], "cd")) // deal with cd being invoked when /dir is given without cd previosuly
 		builtins_cd(argc, argv, env); // make this
 	// else if (ft_strequ(argv[0], "setenv"))
 	// 	builtins_setenv(argv, argc); // make this
@@ -22,7 +22,7 @@ int run_minishell_command(int argc, char **argv, char **env)
 	// else if (argv[0][0] == '.' && argv[0][1] == '/')
 	// 	run_executable(argv, argc); // make this.
 	else
-		not_builtin(argc, argv, envp); // make this. searches the env paths for the executable
+		not_builtin(argv, env); // make this. searches the env paths for the executable
 //		ft_printf("command not found: %s\n", argv[0]);
 	return (1);
 
@@ -60,10 +60,14 @@ int run_minishell_command(int argc, char **argv, char **env)
 // 	char **args;
 // }
 
-int		print_errors(int error)
+int		print_errors(int error, char *problem)
 {
 	if (error == NO_CLOSING_QUOTE)
 		ft_printf("missing closing quote\n");
+	else if (error == DIR_NOT_FOUND)
+		ft_printf("no directory \"%s\" found\n", problem);
+	else if (error == COMMAND_NOT_FOUND)
+		ft_printf("command \"%s\" not found\n", problem);
 	return (0);
 }
 
