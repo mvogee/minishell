@@ -10,7 +10,9 @@ int run_minishell_command(int argc, char **argv, char **env)
 	else if (ft_strequ(argv[0], "echo"))
 		builtins_echo(argc, argv);
 	else if (ft_strequ(argv[0], "cd")) // deal with cd being invoked when /dir is given without cd previosuly
-		builtins_cd(argc, argv, env); // make this
+		builtins_cd(argc, argv + 1, env); // make this
+	else if (argv[0][0] == '/' || argv[0][0] == '~')
+		builtins_cd(argc, argv, env);
 	// else if (ft_strequ(argv[0], "setenv"))
 	// 	builtins_setenv(argv, argc); // make this
 	// else if (ft_strequ(argv[0], "unsetenv"))
