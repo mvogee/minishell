@@ -49,7 +49,7 @@ char	*abstract_arg(int arglen, char *line);
 
 void	builtins_echo(int argc, char **argv);
 
-void	builtins_cd(int argc, char **argv, char **env);
+void	builtins_cd(char **argv, char **env);
 
 void	not_builtin(char **argv, char **env);
 
