@@ -98,7 +98,7 @@ void	not_builtin(char **argv, char **env)
 	else
 	{
 		waitpid(pid, &status, WUNTRACED);
-		while (!WIFEXITED(status) && !WIFSIGNALED(status)) // not sure what these do
+		while (!WIFEXITED(status) && !WIFSIGNALED(status))
 			waitpid(pid, &status, WUNTRACED);
 		kill(pid, SIGCONT);
 	}
