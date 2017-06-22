@@ -56,6 +56,6 @@ void	builtins_cd(char **argv, char **env);
 
 void	not_builtin(char **argv, char **env);
 
-void	builtins_setenv(char **argv, char **env);
+int		builtins_setenv(int argc, char **argv, char **env);
 
 #endif

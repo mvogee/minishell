@@ -14,7 +14,7 @@ int run_minishell_command(int argc, char **argv, char **env) // should i make th
 	else if (argv[0][0] == '/' || argv[0][0] == '~')
 		builtins_cd(argv, env);
 	else if (ft_strequ(argv[0], "setenv"))
-		builtins_setenv(argv, env); // make this
+		builtins_setenv(argc, argv, env); // make this
 	// else if (ft_strequ(argv[0], "unsetenv"))
 	// 	builtins_unsetenv(argv, argc); // make this
 	// else if (ft_strequ(argv[0], "env"))
