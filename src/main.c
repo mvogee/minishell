@@ -3,18 +3,18 @@
 
 // • You must implement a series of builtins: echo, cd, setenv, unsetenv, env, exit
 
-int run_minishell_command(int argc, char **argv, char **env)
+int run_minishell_command(int argc, char **argv, char **env) // should i make these functions return a value?
 {
 	if (ft_strequ(argv[0], "exit"))
 		return (0);
 	else if (ft_strequ(argv[0], "echo"))
 		builtins_echo(argc, argv);
-	else if (ft_strequ(argv[0], "cd")) // deal with cd being invoked when /dir is given without cd previosuly
-		builtins_cd(argv + 1, env); // make this
+	else if (ft_strequ(argv[0], "cd"))
+		builtins_cd(argv + 1, env);
 	else if (argv[0][0] == '/' || argv[0][0] == '~')
 		builtins_cd(argv, env);
-	// else if (ft_strequ(argv[0], "setenv"))
-	// 	builtins_setenv(argv, argc); // make this
+	else if (ft_strequ(argv[0], "setenv"))
+		builtins_setenv(argv, env); // make this
 	// else if (ft_strequ(argv[0], "unsetenv"))
 	// 	builtins_unsetenv(argv, argc); // make this
 	// else if (ft_strequ(argv[0], "env"))
@@ -26,8 +26,9 @@ int run_minishell_command(int argc, char **argv, char **env)
 	else
 		not_builtin(argv, env); // make this. searches the env paths for the executable
 //		ft_printf("command not found: %s\n", argv[0]);
+	// printf("%s\n", env[18]);
+	// printf("%s\n", env[19]);
 	return (1);
-
 }
 
 // char	**get_commands(char *line)
@@ -68,6 +69,10 @@ int		print_errors(int error, char *problem)
 		ft_printf("missing closing quote\n");
 	else if (error == DIR_NOT_FOUND)
 		ft_printf("cd: no such file or directory: %s\n", problem);
+	else if (error == CD_NOT_A_DIR)
+		ft_printf("cd: not a directory: %s\n", problem);
+		else if (error == CD_NO_RIGHTS)
+			ft_printf("cd: permission denied: %s\n", problem);
 	else if (error == COMMAND_NOT_FOUND)
 		ft_printf("command not found: %s\n", problem);
 	return (0);

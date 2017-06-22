@@ -3,6 +3,7 @@
 
 #include "libft.h"
 #include "ft_printf.h"
+#include <sys/stat.h>
 #include <signal.h>
 #include <stdlib.h>
 
@@ -13,6 +14,8 @@ enum e_errors
 {
 	NO_CLOSING_QUOTE,
 	DIR_NOT_FOUND,
+	CD_NOT_A_DIR,
+	CD_NO_RIGHTS,
 	COMMAND_NOT_FOUND,
 	WRONG
 };
@@ -52,5 +55,7 @@ void	builtins_echo(int argc, char **argv);
 void	builtins_cd(char **argv, char **env);
 
 void	not_builtin(char **argv, char **env);
+
+void	builtins_setenv(char **argv, char **env);
 
 #endif

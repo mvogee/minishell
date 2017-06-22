@@ -20,21 +20,6 @@ char	*retrieve_home(char **env)
 	return (home);
 }
 
-// int		chdir_home(char **env)
-// {
-// 	int ret;
-// 	char *home_dir;
-//
-// 	ret = -1;
-// 	home_dir = retrieve_home(env);
-// 	if (home_dir)
-// 	{
-// 		ret = chdir(home_dir);
-// 		free(home_dir);
-// 	}
-// 	return (ret);
-// }
-
 char *get_path(char **argv, char **env)
 {
 	char	*path;
@@ -52,41 +37,51 @@ char *get_path(char **argv, char **env)
 		path = ft_strdup(homedir);
 	if (homedir)
 		free(homedir);
-	printf("%s\n", path);
 	return (path);
 }
 
-int		get_oldpwd_pos(char **env)
+int		get_env_pos(char **env, char *var)
 {
 	int		i;
+	int		j;
 
 	i = 0;
 	while(env[i])
 	{
-		if (env[i][0] == 'O' && env[i][1] == 'L' && env[i][2] == 'D' &&
-			env[i][3] == 'P' && env[i][4] == 'W' &&
-			env[i][5] == 'D' && env[i][6] == '=')
-		return (i);
+		j = 0;
+		while (var[j] == env[i][j])
+			j++;
+		if (var[j] == '\0')
+			return (i);
 		i++;
 	}
 	return (-1);
 }
 
-void	update_old_cwd(char *cwd, char **env)
+void update_cwd_vars(char *cwd, char **env, char *envvar)
 {
-	char	*envvar;
 	int		pos;
 
-	envvar = "OLDPWD=";
-	pos = get_oldpwd_pos(env);
+	pos = get_env_pos(env, envvar);
 	if (pos < 0)
 		return ;
 	free(env[pos]);
 	env[pos] = ft_strjoin(envvar, cwd);
 }
 
-// catch for being an existing file but not directory. currently just throws normal error.
-// need to rethink this functions functionality and how to have it work.
+void	get_cd_error(char *arg)
+{
+	struct stat path_stat;
+
+    lstat(arg, &path_stat);
+    if (S_ISREG(path_stat.st_mode))
+		print_errors(CD_NOT_A_DIR, arg);
+	else if (S_ISDIR(path_stat.st_mode))
+		print_errors(CD_NO_RIGHTS, arg);
+	else
+		print_errors(DIR_NOT_FOUND, arg);
+}
+
 void	builtins_cd(char **argv, char **env)
 {
 	char	*cwd;
@@ -94,28 +89,22 @@ void	builtins_cd(char **argv, char **env)
 
 	cwd = NULL;
 	path = get_path(argv, env);
-	printf("%s\n", path);
 	int i;
 	i = 0;
 	cwd = getcwd(cwd, MAX_PATH);
 	i = chdir(path);
-//	printf("%d\n", i);
 	if (!i)
 	{
-		printf("%s\n", cwd);
-		update_old_cwd(cwd, env); // make this. update the env variable for last_pwd
+		update_cwd_vars(cwd, env, "OLDPWD=");
 		free(cwd);
 		cwd = NULL;
 		cwd = getcwd(cwd, MAX_PATH);
-		printf("%s\n", cwd);
-	//	update_cwd(cwd, env); // make this. update the env variale for current working directory
+		update_cwd_vars(cwd, env, "PWD="); // make this. update the env variale for current working directory
 	}
 	else
-		print_errors(DIR_NOT_FOUND, argv[0]);
+		get_cd_error(argv[0]); // make me. check if the argument is an existing file.
 	if (path)
 		free(path);
 	if (cwd)
 		free(cwd);
-	printf("%s\n", env[18]);
-	printf("%s\n", env[19]);
 }

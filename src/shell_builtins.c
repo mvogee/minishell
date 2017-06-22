@@ -4,12 +4,26 @@
 int		find_paths(char **env)
 {
 	int		i;
+	char 	*pathvar;
 
 	i = 0;
 	while (env[i])
 	{
-		if (env[i][0] == 'P' && env[i][1] == 'A' && env[i][2] == 'T' && env[i][3] == 'H' && env[i][4] == '=')
+		if (ft_strlen(env[i]) >= 5)
+			pathvar = ft_strsub(env[i], 0, 5);
+		else
+			pathvar = NULL;
+		if (ft_strequ(pathvar, "PATH="))
+		{
+			free(pathvar);
+			pathvar = NULL;
 			return (i);
+		}
+		if (pathvar)
+		{
+			free(pathvar);
+			pathvar = NULL;
+		}
 		i++;
 	}
 	return (-1);
