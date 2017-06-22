@@ -5,16 +5,23 @@ char	*retrieve_home(char **env)
 {
 	int i;
 	char *home;
+	char *envvar;
 
 	i = 0;
 	home = NULL;
 	while (env[i])
 	{
-		if (env[i][0] == 'H' && env[i][1] == 'O' && env[i][2] == 'M' && env[i][3] == 'E' && env[i][4] == '=')
+		envvar = NULL;
+		if (ft_strlen(env[i]) >= 5)
+			envvar = ft_strsub(env[i], 0, 5);
+		if (ft_strequ(envvar, "HOME="))
 		{
 			home = ft_strsub(env[i], 5, ft_strlen(env[i]) - 5);
+			free(envvar);
 			break ;
 		}
+		if (envvar)
+			free(envvar);
 		i++;
 	}
 	return (home);
